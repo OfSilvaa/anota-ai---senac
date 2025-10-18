@@ -1,36 +1,64 @@
 /* Criar banco de dados */
-CREATE DATABASE IF NOT EXISTS db_anotacoes;
-USE db_anotacoes;
+CREATE DATABASE db_anota_ai;
 
-/* Criar tabela de usuários */
-CREATE TABLE tb_usuario (
-    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE
+-- utiliza o banco
+USE db_anota_ai;
+
+-- criar as tabelas em ordem das tabelas que não tem relação
+CREATE TABLE tb_usuario(
+	id_usuario 		INT PRIMARY KEY,
+	nome_completo 	VARCHAR(255) NOT NULL,
+	email			VARCHAR(255) NOT NULL UNIQUE,
+	senha 			VARCHAR(100) NOT NULL,
+	data_nasc		DATE NOT NULL
 );
 
-/* Criar tabela de anotações */
-/* Cada usuário pode ter até 3 anotações */
-CREATE TABLE tb_anotacao (
-    id_anotacao INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL,
-    texto TEXT NOT NULL,
-    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_usuario) REFERENCES tb_usuario(id_usuario)
-);
 
-/* Exemplo de inserção de usuário */
-INSERT INTO tb_usuario (nome, email) VALUES
-('Ana Silva', 'ana@email.com');
+CREATE TABLE tb_anotacao(
+	id_anotacao			INT AUTO_INCREMENT PRIMARY KEY
+    ,descricao 			VARCHAR (500) NOT NULL
+    ,data_criacao		DATE NOT NULL
+    ,data_finalizacao 	DATE 	NULL
+    ,id_usuario			INT		NULL
+    
+    ,FOREIGN KEY(id_usuario) REFERENCES tb_usuario(id_usuario)
+    );
+    
+-- consulta as tabelas para ver se existe
+SELECT * FROM tb_usuario;
+select * from tb_anotacao;
 
-/* Exemplo de inserção de 3 anotações para o usuário */
-INSERT INTO tb_anotacao (id_usuario, texto) VALUES
-(1, 'Anotação 1: Comprar leite'),
-(1, 'Anotação 2: Reunião às 15h'),
-(1, 'Anotação 3: Estudar SQL');
+-- inserir os dados na tabela
+INSERT INTO tb_usuario(nome_completo, email, senha, data_nasc, id_usuario)
+VALUES
+    (
+        'Joaquim da Silva',
+        'joaquim@email.com',
+        '123',
+        '1992-07-02',
+        1
+    ),
+    (
+        'Maria Souza',
+        'maria@email.com',
+        '456',
+        '1990-05-15',
+        2
+    );
 
-/* Consulta para listar anotações com nome do usuário */
-SELECT u.nome, a.texto, a.data_criacao
-FROM tb_anotacao a
-JOIN tb_usuario u ON a.id_usuario = u.id_usuario
-ORDER BY u.id_usuario, a.id_anotacao;
+    
+INSERT INTO tb_anotacao(descricao, data_criacao, data_finalizacao, id_usuario)
+VALUES
+    (
+        'Limpar o banheiro',
+        '2025-10-10',
+        '2025-10-10',
+        1
+    ),
+    (
+        'Cuidar da criança',
+        '2025-10-10',
+        NULL,
+        2
+    );
+
